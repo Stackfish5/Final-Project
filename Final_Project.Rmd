@@ -1,0 +1,103 @@
+---
+title: "Final Project"
+author: "Andrew Zhuo"
+date: '2022-07-06'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(chessR)
+library(tidyverse)
+library(rvest)
+library(dplyr)
+library(plotly)
+library(distill)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r}
+chess_openings <- get_raw_chessdotcom(usernames = c("MagnusCarlsen",
+                                                    "Chefshouse",
+                                                    "lachesisQ",
+                                                    "Firouzja2003",
+                                                    "FabianoCaruana"))
+```
+
+This is our current tibble we will be working with. Here is the raw data:
+
+```{r}
+glimpse(chess_openings)
+```
+
+It's quite confusing, so we can search for the columns necessary: ECO (Encyclopedia of Chess Openings), the Username (for percentage calculations).
+
+We can try finding the frequencies of each type of opening. Since ECO classifies various openings in different ways. A character in the beginning to represent the type of opening (i.e. flank opening, open game, etc.) So we can broadly classify these kind of openings by running this code snippet below (the string down there dictates the type of opening). So we can individually run the code and get the results:
+
+- 18066 A type openings (flank)
+- 10338 B type openings (semi-open games besides the French Defense)
+- 5780 C type openings (open games)
+- 3822 D type openings (semi-closed and closed games)
+- 2585 E type openings (Indian Defenses)
+
+```{r}
+graph_a <- chess_openings |> 
+  select(c(ECO, Username)) |> 
+  mutate(total = n()) |> 
+  drop_na() |> 
+  #Get classification
+  mutate(opening_type = ifelse(str_detect(ECO, "A"), "A", 
+                              ifelse(str_detect(ECO, "B"), "B", 
+                                     ifelse(str_detect(ECO, "C"), "C",
+                                            ifelse(str_detect(ECO, "D"), "D", 
+                                                   "E"))))) |> 
+  mutate(games_played_with_opening = ifelse(opening_type == "A", 18066,
+                                            ifelse(opening_type == "B", 10338, 
+                                                   ifelse(opening_type == "C", 5780,
+                                                          ifelse(opening_type == "D", 3822,
+                                                                 2585))))) |> 
+  mutate(percent = games_played_with_opening / 40591) |> 
+  select(opening_type, percent) |> 
+  distinct() |> 
+  ggplot(mapping = aes(x = opening_type, y = percent, fill = opening_type)) + 
+  geom_col() +
+  scale_y_continuous(labels = scales::percent, breaks=c(0,.1,.2,.3,.4,.5,.6,.7,.8,.9,100)) +
+  theme_classic() +
+  labs(title = "Most Popular Type of Chess Openings Among 5  Grandmasters",
+       subtitle = "'A' type (flank openings) appear to be the most commonly played",
+       x = "Opening Type", y = "Occurrences", fill = "Type", 
+       caption = "Source: chess.com databases")
+
+ggplotly(graph_a, tooltip = c("x", "y", "color"))
+```
+
+
+
+```{r}
+y <- chess_openings |> 
+  select(ECO, Username) |> 
+  filter(str_detect(ECO, "A")) |> 
+  #get percentage played
+  mutate(games_for_opening = (n()/10000)) |> 
+  arrange(ECO) |> 
+  ggplot(mapping = aes(x = ECO, y = games_for_opening, fill = ECO)) +
+  geom_col(width = 1.5) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 0.5)) +
+  scale_y_continuous(labels = c(0, 2000, 4000, 6000, 8000, 10000, 12000, 14000,
+                                16000, 180000, 20000)) |> 
+  labs(title = "Comparing The Amount of Games Played Using Type-A Openings",
+       subtitle = "A00 (Irregular openings) seems to be the most prevalent\n
+       for some reason", x = "Opening", y = "Games played", 
+       caption = "Source: chess.com databases")
+ggplotly(y, tooltip = c("x", "color"))
+```
+
+
+
+
+
+
