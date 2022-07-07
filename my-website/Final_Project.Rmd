@@ -5,13 +5,12 @@ date: '2022-07-06'
 output: html_document
 ---
 
+## Acquiring Data
+
+We can first install the the necessary packages needed for this project.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-
-We can first install the 
-
-```{r}
 library(chessR)
 library(tidyverse)
 library(rvest)
@@ -20,7 +19,10 @@ library(plotly)
 library(distill)
 ```
 
-## Final Project
+
+
+Now we can collect the data from the databases on chess.com. But the question at hand is which people should we use for the data. So we end up cho0sing the top 5 chess grandmasters currently: Magnus Carlsen, Ding Liren, Ian Nepomniachtchi, Alireza Firouzja and Fabiano Caruana.
+
 
 ```{r Load Data}
 chess_openings <- get_raw_chessdotcom(usernames = c("MagnusCarlsen",
@@ -35,6 +37,8 @@ This is our current tibble we will be working with. Here is the raw data:
 ```{r Tibble}
 glimpse(chess_openings)
 ```
+
+##Processing Data
 
 It's quite confusing, so we can search for the columns necessary: ECO (Encyclopedia of Chess Openings), the Username (for percentage calculations).
 
