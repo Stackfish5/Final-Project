@@ -5,6 +5,11 @@ date: '2022-07-06'
 output: html_document
 ---
 
+##About the Project
+
+Chess openings are crucial to a successful chess match for both sides. Are you ever curious about what types of openings grandmasters play the most frequently? This presentation will delve into the different and numerous openings 5 selected grandmasters play.
+
+
 ## Acquiring Data
 
 We can first install the the necessary packages needed for this project.
@@ -50,9 +55,10 @@ We can try finding the frequencies of each type of opening. Since ECO classifies
 -   3822 D type openings (semi-closed and closed games)
 -   2585 E type openings (Indian Defenses)
 
+Now we can proceed and create a plot, making good use of the data from the tibble:
 ```{r Most common type of opening}
 graph_a <- chess_openings |> 
-  select(c(ECO, Username)) |> 
+  select(ECO, Username) |> 
   mutate(total = n()) |> 
   drop_na() |> 
   #Get classification
@@ -71,7 +77,7 @@ graph_a <- chess_openings |>
   distinct() |> 
   ggplot(mapping = aes(x = opening_type, y = percent, fill = opening_type)) + 
   geom_col() +
-  scale_y_continuous(labels = scales::percent, breaks=c(0,.1,.2,.3,.4,.5,.6,.7,.8,.9,100)) +
+  scale_y_continuous(labels = scales::percent) +
   theme_classic() +
   labs(title = "Most Popular Type of Chess Openings Among 5  Grandmasters",
        subtitle = "'A' type (flank openings) appear to be the most commonly played",
@@ -81,8 +87,7 @@ graph_a <- chess_openings |>
 ggplotly(graph_a, tooltip = c("x", "y", "color"))
 ```
 
-Since we now have a graph representing
-
+It appears that Flank Openings (A) are most common among the grandmasters. Thus, to further investigate this, we use that data from column A and create a new graph this time analyzing the specific openings used.
 ```{r Most common opening}
 y <- chess_openings |> 
   select(ECO, Username) |> 
@@ -93,11 +98,17 @@ y <- chess_openings |>
   ggplot(mapping = aes(x = ECO, y = games_for_opening, fill = ECO)) +
   geom_col(width = 1.5) +
   theme(axis.text.x = element_text(angle = 90, hjust = 0.5)) +
-  scale_y_continuous(labels = c(0, 2000, 4000, 6000, 8000, 10000, 12000, 14000,
-                                16000, 180000, 20000)) |> 
   labs(title = "Comparing The Amount of Games Played Using Type-A Openings",
        subtitle = "A00 (Irregular openings) seems to be the most prevalent\n
        for some reason", x = "Opening", y = "Games played", 
        caption = "Source: chess.com databases")
 ggplotly(y, tooltip = c("x", "color"))
 ```
+##Summary
+It appears that the most frequently used category of chess opening are flank openings, making up at least 44% of the data, hypermodern openings. But then again, the data is mostly from online games, which are usually more casual than actual games. Additionally, the selection of grandmasters for the sample might have been not diverse enough. Moreover, the library I used to compile the data might have had some issues with the data.
+
+##Sources
+
+- [Chess.com](chess.com)
+- [RChess](https://github.com/jbkunst/rchess)
+- And Primer.tutorials
