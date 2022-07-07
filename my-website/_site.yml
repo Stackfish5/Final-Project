@@ -1,5 +1,5 @@
-name: "my-website"
-title: "My Website"
+name: "Final-Project"
+title: "Most Prevalent Chess Openings Used"
 description: |
   My Website
 output_dir: "_site"
