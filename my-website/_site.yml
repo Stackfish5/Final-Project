@@ -9,6 +9,6 @@ navbar:
       href: index.html
     - text: "About"
       href: about.html
-    - text: "Final Project"
+    - text: "Chess Openings"
       href: Final_Project.html
 output: distill::distill_article

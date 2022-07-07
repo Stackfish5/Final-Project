@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+We can first install the 
+
 ```{r}
 library(chessR)
 library(tidyverse)
@@ -18,9 +20,9 @@ library(plotly)
 library(distill)
 ```
 
-
 ## Final Project
-```{r}
+
+```{r Load Data}
 chess_openings <- get_raw_chessdotcom(usernames = c("MagnusCarlsen",
                                                     "Chefshouse",
                                                     "lachesisQ",
@@ -30,7 +32,7 @@ chess_openings <- get_raw_chessdotcom(usernames = c("MagnusCarlsen",
 
 This is our current tibble we will be working with. Here is the raw data:
 
-```{r}
+```{r Tibble}
 glimpse(chess_openings)
 ```
 
@@ -38,13 +40,13 @@ It's quite confusing, so we can search for the columns necessary: ECO (Encyclope
 
 We can try finding the frequencies of each type of opening. Since ECO classifies various openings in different ways. A character in the beginning to represent the type of opening (i.e. flank opening, open game, etc.) So we can broadly classify these kind of openings by running this code snippet below (the string down there dictates the type of opening). So we can individually run the code and get the results:
 
-- 18066 A type openings (flank)
-- 10338 B type openings (semi-open games besides the French Defense)
-- 5780 C type openings (open games)
-- 3822 D type openings (semi-closed and closed games)
-- 2585 E type openings (Indian Defenses)
+-   18066 A type openings (flank)
+-   10338 B type openings (semi-open games besides the French Defense)
+-   5780 C type openings (open games)
+-   3822 D type openings (semi-closed and closed games)
+-   2585 E type openings (Indian Defenses)
 
-```{r}
+```{r Most common type of opening}
 graph_a <- chess_openings |> 
   select(c(ECO, Username)) |> 
   mutate(total = n()) |> 
@@ -75,9 +77,9 @@ graph_a <- chess_openings |>
 ggplotly(graph_a, tooltip = c("x", "y", "color"))
 ```
 
+Since we now have a graph representing
 
-
-```{r}
+```{r Most common opening}
 y <- chess_openings |> 
   select(ECO, Username) |> 
   filter(str_detect(ECO, "A")) |> 
@@ -95,9 +97,3 @@ y <- chess_openings |>
        caption = "Source: chess.com databases")
 ggplotly(y, tooltip = c("x", "color"))
 ```
-
-
-
-
-
-
