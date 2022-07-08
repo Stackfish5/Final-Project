@@ -6,4 +6,8 @@ description: |
 
 ##Hello There
 
-My name is Andrew Zhuo. I will attend 9th grade in the fall. This project was not my first selection, but it was the only one where I could find data on. Introducing chess openings.
+My name is Andrew Zhuo. I will attend 9th grade in the fall at Newton North Highschool. I enjoy 
+
+##Regarding the Project
+
+This project was not my first selection, but it was the only one where I could find data on. Introducing chess openings.

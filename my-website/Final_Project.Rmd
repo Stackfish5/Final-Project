@@ -5,6 +5,10 @@ date: '2022-07-06'
 output: html_document
 ---
 
+##What Are Chess Openings?
+
+It is the initial stage of the chess game. Opening moves are based off chess theory, which are a set of general knowledges about analysis, positions, tactics and more.
+
 ##About the Project
 
 Chess openings are crucial to a successful chess match for both sides. Are you ever curious about what types of openings grandmasters play the most frequently? This presentation will delve into the different and numerous openings 5 selected grandmasters play.
